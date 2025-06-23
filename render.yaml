@@ -1,5 +1,4 @@
 services:
-  # Backend API (FastAPI)
   - type: web
     name: unisearch-backend
     env: python
@@ -30,14 +29,12 @@ services:
       - key: LOG_LEVEL
         value: INFO
 
-# Shared database
 databases:
   - name: unisearch-db
     plan: free
     databaseName: unisearch
     user: unisearch_user
 
-# Optional: shared environment variables
 envVarGroups:
   - name: unisearch-shared
     envVars:

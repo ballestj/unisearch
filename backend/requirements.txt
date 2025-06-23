@@ -1,16 +1,17 @@
-# Core Web Framework
+# Web Framework
 fastapi==0.104.1
 uvicorn==0.24.0
 
-# DB and Config
+# Database
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 alembic==1.13.0
-python-dotenv==1.0.0
-pydantic==2.5.0
-pydantic-settings==2.1.0
 
-# HTTP + External APIs
+# Environment & Configuration
+python-dotenv==1.0.0
+pydantic==1.10.13  # Downgraded to avoid pydantic-core build issue
+
+# HTTP & APIs
 httpx==0.25.2
 requests==2.31.0
 aiohttp==3.9.1
@@ -21,15 +22,20 @@ google-auth-oauthlib==1.2.0
 google-auth-httplib2==0.2.0
 google-api-python-client==2.110.0
 
-# Data Handling
-numpy==1.26.2
+# Data & Parsing
 pandas==2.0.3
-ujson==5.9.0
-thefuzz==0.20.0
+numpy==1.26.2
 python-dateutil==2.8.2
+thefuzz==0.20.0
+ujson==5.9.0
 
-# Core Utilities
+# Scraping (Optional, keep only if used server-side)
+beautifulsoup4==4.12.2
+
+# Utilities
 python-multipart==0.0.6
 email-validator==2.1.0
-fastapi-cors==0.0.6
 loguru==0.7.2
+
+# CORS
+fastapi-cors==0.0.6

@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 class UniversityDataIntegrator:
     """Integrates Google Sheets feedback data with QS rankings database."""
     
-    def __init__(self, credentials_file='credentials.json', ***REMOVED***_file='***REMOVED***.json'):
+    def __init__(self, credentials_file='credentials.json', token_file='token.json'):
         self.credentials_file = credentials_file
-        self.***REMOVED***_file = ***REMOVED***_file
+        self.token_file = token_file
         self.scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
         self.service = None
         
@@ -30,22 +30,22 @@ class UniversityDataIntegrator:
         """Authenticate with Google Sheets API."""
         creds = None
         
-        # Load existing ***REMOVED***
-        if os.path.exists(self.***REMOVED***_file):
-            creds = Credentials.from_authorized_user_file(self.***REMOVED***_file, self.scopes)
+        # Load existing token
+        if os.path.exists(self.token_file):
+            creds = Credentials.from_authorized_user_file(self.token_file, self.scopes)
         
         # If there are no (valid) credentials available, request authorization
         if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_***REMOVED***:
+            if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_***REMOVED***s_file(
+                flow = InstalledAppFlow.from_client_secrets_file(
                     self.credentials_file, self.scopes)
                 creds = flow.run_local_server(port=8080)
             
             # Save the credentials for the next run
-            with open(self.***REMOVED***_file, 'w') as ***REMOVED***:
-                ***REMOVED***.write(creds.to_json())
+            with open(self.token_file, 'w') as token:
+                token.write(creds.to_json())
         
         self.service = build('sheets', 'v4', credentials=creds)
         logger.info("Successfully authenticated with Google Sheets API")
@@ -132,11 +132,11 @@ class UniversityDataIntegrator:
                 # Calculate similarity scores
                 ratio = fuzz.ratio(standardized_feedback.lower(), standardized_qs.lower())
                 partial = fuzz.partial_ratio(standardized_feedback.lower(), standardized_qs.lower())
-                ***REMOVED***_sort = fuzz.***REMOVED***_sort_ratio(standardized_feedback.lower(), standardized_qs.lower())
-                ***REMOVED***_set = fuzz.***REMOVED***_set_ratio(standardized_feedback.lower(), standardized_qs.lower())
+                token_sort = fuzz.token_sort_ratio(standardized_feedback.lower(), standardized_qs.lower())
+                token_set = fuzz.token_set_ratio(standardized_feedback.lower(), standardized_qs.lower())
                 
                 # Weighted average of different similarity measures
-                combined_score = (ratio * 0.3 + partial * 0.2 + ***REMOVED***_sort * 0.25 + ***REMOVED***_set * 0.25)
+                combined_score = (ratio * 0.3 + partial * 0.2 + token_sort * 0.25 + token_set * 0.25)
                 
                 if combined_score > best_score and combined_score >= 80:  # Threshold for match
                     best_score = combined_score
