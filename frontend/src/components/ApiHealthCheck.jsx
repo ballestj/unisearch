@@ -10,11 +10,13 @@ const ApiHealthCheck = () => {
     error: null
   });
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const checkApiHealth = async () => {
     setHealthStatus(prev => ({ ...prev, status: 'checking' }));
     
     try {
-      const response = await fetch('http://localhost:8000/api/health');
+      const response = await fetch(`${BASE_URL}/api/health`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -106,7 +108,7 @@ const ApiHealthCheck = () => {
           <div className="mt-2 p-2 bg-white bg-opacity-50 rounded border">
             <strong>Error:</strong> {healthStatus.error}
             <div className="mt-1 text-xs">
-              Make sure the backend server is running on http://localhost:8000
+              Make sure the backend server is running on {BASE_URL}
             </div>
           </div>
         )}

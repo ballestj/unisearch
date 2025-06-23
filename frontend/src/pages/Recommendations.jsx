@@ -14,13 +14,15 @@ const Recommendations = ({ onNavigate, onSelectUniversity }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     fetchCountries();
   }, []);
 
   const fetchCountries = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/countries');
+      const response = await fetch(`${BASE_URL}/api/countries`);
       if (response.ok) {
         const data = await response.json();
         setCountries(data.slice(0, 20)); // Show top 20 countries
@@ -41,7 +43,7 @@ const Recommendations = ({ onNavigate, onSelectUniversity }) => {
         max_ranking: preferences.max_ranking ? parseInt(preferences.max_ranking) : null
       };
 
-      const response = await fetch('http://localhost:8000/api/recommendations', {
+      const response = await fetch(`${BASE_URL}/api/recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

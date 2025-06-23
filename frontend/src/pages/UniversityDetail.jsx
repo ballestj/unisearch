@@ -6,6 +6,8 @@ const UniversityDetail = ({ universityId, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     if (universityId) {
       fetchUniversityDetails();
@@ -17,7 +19,7 @@ const UniversityDetail = ({ universityId, onNavigate }) => {
     setError(null);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/universities/${universityId}`);
+      const response = await fetch(`${BASE_URL}/api/universities/${universityId}`);
       
       if (!response.ok) {
         if (response.status === 404) {

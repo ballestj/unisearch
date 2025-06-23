@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Filter, MapPin, Trophy, Users, Star, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import ApiHealthCheck from '../components/ApiHealthCheck';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const SearchPage = ({ onNavigate, onSelectUniversity }) => {
   const [universities, setUniversities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const SearchPage = ({ onNavigate, onSelectUniversity }) => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/countries');
+        const response = await fetch(`${BASE_URL}/api/countries`);
         if (response.ok) {
           const data = await response.json();
           setCountries(data || []);
@@ -65,7 +67,7 @@ const SearchPage = ({ onNavigate, onSelectUniversity }) => {
 
       console.log('Searching with params:', searchParams.toString());
       
-      const response = await fetch(`http://localhost:8000/api/universities?${searchParams}`);
+      const response = await fetch(`${BASE_URL}/api/universities?${searchParams}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

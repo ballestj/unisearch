@@ -3,8 +3,7 @@ import pandas as pd
 import os
 import json
 from pathlib import Path
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from thefuzz import fuzz
@@ -19,36 +18,25 @@ logger = logging.getLogger(__name__)
 
 class UniversityDataIntegrator:
     """Integrates Google Sheets feedback data with QS rankings database."""
-    
-    def __init__(self, credentials_file='credentials.json', token_file='token.json'):
-        self.credentials_file = credentials_file
-        self.token_file = token_file
+
+    def __init__(self):
         self.scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
         self.service = None
-        
+
     def authenticate_google_sheets(self):
-        """Authenticate with Google Sheets API."""
-        creds = None
-        
-        # Load existing token
-        if os.path.exists(self.token_file):
-            creds = Credentials.from_authorized_user_file(self.token_file, self.scopes)
-        
-        # If there are no (valid) credentials available, request authorization
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    self.credentials_file, self.scopes)
-                creds = flow.run_local_server(port=8080)
-            
-            # Save the credentials for the next run
-            with open(self.token_file, 'w') as token:
-                token.write(creds.to_json())
-        
-        self.service = build('sheets', 'v4', credentials=creds)
-        logger.info("Successfully authenticated with Google Sheets API")
+        """Authenticate with Google Sheets API using credentials from environment variable."""
+        google_creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
+        if not google_creds_json:
+            raise ValueError("Missing GOOGLE_CREDENTIALS_JSON environment variable")
+
+        try:
+            creds_dict = json.loads(google_creds_json)
+            creds = service_account.Credentials.from_service_account_info(creds_dict, scopes=self.scopes)
+            self.service = build('sheets', 'v4', credentials=creds)
+            logger.info("Successfully authenticated with Google Sheets API")
+        except Exception as e:
+            logger.error(f"Failed to load Google credentials: {e}")
+            raise
     
     def standardize_university_name(self, name: str) -> str:
         """Enhanced university name standardization."""
