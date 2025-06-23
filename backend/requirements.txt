@@ -24,7 +24,7 @@ google-api-python-client==2.110.0
 # Data Handling
 numpy==1.26.2
 pandas==2.0.3
-orjson==3.9.10
+ujson==5.9.0
 thefuzz==0.20.0
 python-dateutil==2.8.2
 
