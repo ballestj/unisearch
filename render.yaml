@@ -1,5 +1,7 @@
+services:
+  # Backend API (FastAPI)
   - type: web
-    name: unisearch-api
+    name: unisearch-backend
     env: python
     plan: free
     region: oregon
@@ -22,11 +24,28 @@
       - key: API_HOST
         value: 0.0.0.0
       - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: unisearch-frontend
-          property: host
+        value: https://unisearch-gamma.vercel.app
       - key: SECRET_KEY
         generateValue: true
       - key: LOG_LEVEL
         value: INFO
+
+# Shared database
+databases:
+  - name: unisearch-db
+    plan: free
+    databaseName: unisearch
+    user: unisearch_user
+
+# Optional: shared environment variables
+envVarGroups:
+  - name: unisearch-shared
+    envVars:
+      - key: CORS_ORIGINS
+        value: '["https://unisearch-gamma.vercel.app"]'
+      - key: CACHE_EXPIRY_HOURS
+        value: "24"
+      - key: ENABLE_DATA_VALIDATION
+        value: "true"
+      - key: AUTO_UPDATE_RANKINGS
+        value: "false"
