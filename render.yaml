@@ -22,8 +22,8 @@ services:
         value: false
       - key: API_HOST
         value: 0.0.0.0
-      - key: FRONTEND_URL
-        value: https://unisearch-gamma.vercel.app
+      - key: FRONTEND_URLS
+        value: https://unisearch-gamma.vercel.app,http://localhost:5173,http://localhost:3000
       - key: SECRET_KEY
         generateValue: true
       - key: LOG_LEVEL

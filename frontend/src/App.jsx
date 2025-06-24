@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import ApiHealthCheck from './components/ApiHealthCheck';
 import Home from './pages/Home';
@@ -11,6 +11,20 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedUniversityId, setSelectedUniversityId] = useState(null);
   const [showHealthCheck, setShowHealthCheck] = useState(false);
+
+  // 🔍 Health Check on First Load
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/health`);
+        const data = await response.json();
+        console.log("✅ API Health:", data);
+      } catch (err) {
+        console.error("❌ Failed to connect to API:", err);
+      }
+    };
+    checkHealth();
+  }, []);
 
   const renderPage = () => {
     try {
@@ -50,7 +64,7 @@ function App() {
           return <Home onNavigate={setCurrentPage} />;
       }
     } catch (error) {
-      // ERROR BOUNDARY - Keeps the app from crashing completely
+      // ERROR BOUNDARY
       return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded">

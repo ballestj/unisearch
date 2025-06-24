@@ -19,7 +19,7 @@ const UniversityDetail = ({ universityId, onNavigate }) => {
     setError(null);
     
     try {
-      const response = await fetch(`${BASE_URL}/api/universities/${universityId}`);
+      const response = await fetch(`${BASE_URL}/universities/${universityId}`);
       
       if (!response.ok) {
         if (response.status === 404) {

@@ -16,7 +16,7 @@ const ApiHealthCheck = () => {
     setHealthStatus(prev => ({ ...prev, status: 'checking' }));
     
     try {
-      const response = await fetch(`${BASE_URL}/api/health`);
+      const response = await fetch(`${BASE_URL}/health`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);

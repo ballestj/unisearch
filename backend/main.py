@@ -24,9 +24,13 @@ app = FastAPI(
 )
 
 # CORS middleware
-allow_origins = [
-    os.getenv("FRONTEND_URL", "http://localhost:5173")
-]
+frontend_urls = os.getenv("FRONTEND_URLS")
+if not frontend_urls:
+    raise RuntimeError("FRONTEND_URLS is not set in the environment variables!")
+
+print("🌐 Allowed Frontend URLs:", frontend_urls)
+allow_origins = [url.strip() for url in frontend_urls.split(",")]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -292,3 +296,5 @@ async def get_stats():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+print("🚦 Allowed CORS origins:", allow_origins)

@@ -32,7 +32,7 @@ const SearchPage = ({ onNavigate, onSelectUniversity }) => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/countries`);
+        const response = await fetch(`${BASE_URL}/countries`);
         if (response.ok) {
           const data = await response.json();
           setCountries(data || []);
@@ -67,7 +67,7 @@ const SearchPage = ({ onNavigate, onSelectUniversity }) => {
 
       console.log('Searching with params:', searchParams.toString());
       
-      const response = await fetch(`${BASE_URL}/api/universities?${searchParams}`);
+      const response = await fetch(`${BASE_URL}/universities?${searchParams}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
